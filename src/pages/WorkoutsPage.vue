@@ -124,12 +124,15 @@
   }
 
   async function handleDeleteWorkout(id) {
+    const confirmed = window.confirm('Are you sure you want to delete this workout?');
+    if (!confirmed) return;
+
     try {
       await api.delete(`/workouts/deleteWorkout/${id}`);
-      notyf.success("Workout deleted.");
+      notyf.success('Workout deleted.');
       fetchWorkouts();
     } catch (error) {
-      notyf.error("Failed to delete workout.");
+      notyf.error('Failed to delete workout.');
     }
   }
 </script>

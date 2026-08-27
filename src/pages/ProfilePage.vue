@@ -119,6 +119,9 @@
   }
 
   async function handleDeleteWorkout(id) {
+    const confirmed = window.confirm('Are you sure you want to delete this workout?');
+    if (!confirmed) return;
+
     try {
       await api.delete(`/workouts/deleteWorkout/${id}`);
       notyf.success('Workout deleted.');
