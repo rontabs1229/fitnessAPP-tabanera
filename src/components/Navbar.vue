@@ -1,15 +1,15 @@
 <template>
   <nav class="navbar">
     <div class="container">
-      <router-link :to="{ name: 'Home'}" class="navbar-brand">
-        <img src="/logo1.png" alt="logo">
+      <router-link :to="{ name: 'Home' }" class="navbar-brand" @click="closeMenu">
+        <img src="/logo1.png" alt="logo" />
         <span class="brand-name-1">RSTJ</span>
         <span class="brand-name-2">Fitness</span>
       </router-link>
 
       <button 
         class="menu-toggle" 
-        @click="isOpen = !isOpen" 
+        @click="toggleMenu" 
         :class="{ active: isOpen }" 
         aria-label="Toggle menu"
       >
@@ -19,12 +19,54 @@
       </button>
 
       <div class="nav-links" :class="{ open: isOpen }">
-        <router-link :to="{ name: 'Home'}" class="nav-link">Home</router-link>
-        <router-link :to="{ name: 'Workouts'}" class="nav-link" v-if="user.email">My Workouts</router-link>
-        <router-link :to="{ name: 'Profile'}" class="nav-link" v-if="user.email">Profile</router-link>
-        <router-link :to="{ name: 'Register'}" class="nav-link" v-if="!user.email">Register</router-link>
-        <router-link :to="{ name: 'Login'}" class="nav-link" v-if="!user.email">Login</router-link>
-        <router-link :to="{ name: 'Logout'}" class="nav-link" v-else>Logout</router-link>
+        <router-link :to="{ name: 'Home' }" class="nav-link" @click="closeMenu">
+          Home
+        </router-link>
+
+        <router-link 
+          v-if="user.email" 
+          :to="{ name: 'Workouts' }" 
+          class="nav-link" 
+          @click="closeMenu"
+        >
+          My Workouts
+        </router-link>
+
+        <router-link 
+          v-if="user.email" 
+          :to="{ name: 'Profile' }" 
+          class="nav-link" 
+          @click="closeMenu"
+        >
+          Profile
+        </router-link>
+
+        <router-link 
+          v-if="!user.email" 
+          :to="{ name: 'Register' }" 
+          class="nav-link" 
+          @click="closeMenu"
+        >
+          Register
+        </router-link>
+
+        <router-link 
+          v-if="!user.email" 
+          :to="{ name: 'Login' }" 
+          class="nav-link" 
+          @click="closeMenu"
+        >
+          Login
+        </router-link>
+
+        <router-link 
+          v-else 
+          :to="{ name: 'Logout' }" 
+          class="nav-link logout-btn" 
+          @click="closeMenu"
+        >
+          Logout
+        </router-link>
       </div>
     </div>
   </nav>
@@ -39,6 +81,14 @@
 
   const globalStore = useGlobalStore();
   const { user } = storeToRefs(globalStore);
+
+  const toggleMenu = () => {
+    isOpen.value = !isOpen.value;
+  };
+
+  const closeMenu = () => {
+    isOpen.value = false;
+  };
 </script>
 
 <style scoped>
@@ -46,6 +96,7 @@
     height: 60px;
     background-color: #9CF6F6;
     position: relative;
+    z-index: 100;
   }
 
   .container {
@@ -144,11 +195,13 @@
     transition: width 0.2s ease;
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link.router-link-active {
     color: #FF7477;
   }
 
-  .nav-link:hover::after {
+  .nav-link:hover::after,
+  .nav-link.router-link-active::after {
     width: 100%;
   }
 
@@ -173,7 +226,7 @@
     }
 
     .nav-links.open {
-      max-height: 300px;
+      max-height: 350px;
     }
 
     .nav-link {
